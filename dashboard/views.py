@@ -124,7 +124,7 @@ class LogoutView(APIView):
         messages.success(request, "Successfully logged out.")
         return response
     
-# ------------------ User Logout ------------------
+# ------------------ search ------------------
 
 def search_users(request):
     query = request.GET.get('query', '').strip()
