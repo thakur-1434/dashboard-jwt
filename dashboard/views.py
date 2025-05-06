@@ -1,6 +1,7 @@
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from django.contrib.auth import authenticate
+from django.core.paginator import Paginator
 from dashboard.renders import UserRenderer
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework_simplejwt.exceptions import InvalidToken, TokenError
@@ -89,10 +90,27 @@ class UserLoginView(APIView):
 
 class UserProfileView(APIView):
     renderer_classes = [UserRenderer]
+
     def get(self, request, format=None):
+        if not request.user.is_authenticated:
+            messages.warning(request, "Please log in.")
+            return redirect('home')  # Redirect if not logged in
+
         user = request.user
         serializer = UserProfileSerializer(user)
         return render(request, 'profile.html', {'user_data': serializer.data})
+    
+
+
+# ------------------All Users Profile ------------------
+def all_users_view(request):
+    users_list = User.objects.all().order_by('-created_at')
+    paginator = Paginator(users_list, 6)  # Show 6 users per page
+
+    page_number = request.GET.get('page')
+    users = paginator.get_page(page_number)
+
+    return render(request, 'alluser.html', {'users': users})
 
 
 # ------------------ User Logout ------------------
@@ -105,6 +123,30 @@ class LogoutView(APIView):
         response.delete_cookie('refresh_token')
         messages.success(request, "Successfully logged out.")
         return response
+    
+# ------------------ User Logout ------------------
+
+def search_users(request):
+    query = request.GET.get('query', '').strip()
+
+    if len(query) > 80:
+        users = User.objects.none()
+    else:
+        users = User.objects.filter(name__icontains=query)
+        # users_by_email = User.objects.filter(email__icontains=query)
+        # users = users_by_name.union(users_by_email)
+
+    # Paginate results
+    paginator = Paginator(users, 2)  # 6 users per page
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
+    context = {
+        'users': page_obj,
+        'query': query
+    }
+
+    return render(request, 'search.html', context)
 
 
 # ------------------ Refresh Token via Cookie ------------------
