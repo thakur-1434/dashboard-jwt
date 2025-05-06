@@ -5,6 +5,8 @@ All Registered Users
 {% endblock title %}
 
 {% block body %}
+
+<!-- Marquee showing the name of the latest registered user -->
 <marquee style="background-color: skyblue; color: black; padding: 20px; font-weight: bold;">
     {% if users %}
         {{ users.0.name }}
@@ -12,17 +14,24 @@ All Registered Users
         No new user.
     {% endif %}
 </marquee>
+
 <div class="container py-5">
     <div class="row justify-content-center">
         <div class="col-lg-10">
+            <!-- Main card container -->
             <div class="card shadow border-0">
+                <!-- Card header -->
                 <div class="card-header bg-primary text-white text-center py-4 rounded-top">
                     <h2 class="fw-bold mb-0">All Registered Users</h2>
                 </div>
+
+                <!-- Card body -->
                 <div class="card-body bg-light rounded-bottom">
                     <div class="row g-4">
+                        <!-- Loop through each user -->
                         {% for user in users %}
                         <div class="col-md-6 col-xl-4">
+                            <!-- User card -->
                             <div class="card h-100 shadow-sm border-0">
                                 <div class="card-body">
                                     <h5 class="card-title text-primary fw-semibold mb-2">
@@ -30,22 +39,23 @@ All Registered Users
                                     </h5>
                                     <p class="mb-1"><strong>Email:</strong> {{ user.email }}</p>
                                     <p class="mb-1"><strong>ID:</strong> {{ user.id }}</p>
-                                    <p class="mb-0"><strong>Joined:</strong> {{ user.date_joined|date:"M d, Y - H:i" }}
-                                    </p>
+                                    <p class="mb-0"><strong>Joined:</strong> {{ user.date_joined|date:"M d, Y - H:i" }}</p>
                                 </div>
                             </div>
                         </div>
                         {% empty %}
+                        <!-- Message when no users are found -->
                         <div class="col-12 text-center text-muted py-4">
                             <p>No users found.</p>
                         </div>
                         {% endfor %}
                     </div>
 
-                    <!-- Pagination -->
+                    <!-- Pagination controls -->
                     <nav class="mt-4">
                         <ul class="pagination justify-content-center">
                             {% if users.has_previous %}
+                            <!-- Link to the first and previous pages -->
                             <li class="page-item">
                                 <a class="page-link" href="?page=1">First</a>
                             </li>
@@ -54,6 +64,7 @@ All Registered Users
                             </li>
                             {% endif %}
 
+                            <!-- Current page number -->
                             <li class="page-item active">
                                 <span class="page-link">
                                     Page {{ users.number }} of {{ users.paginator.num_pages }}
@@ -61,6 +72,7 @@ All Registered Users
                             </li>
 
                             {% if users.has_next %}
+                            <!-- Link to next and last pages -->
                             <li class="page-item">
                                 <a class="page-link" href="?page={{ users.next_page_number }}">Next</a>
                             </li>
@@ -76,4 +88,5 @@ All Registered Users
         </div>
     </div>
 </div>
+
 {% endblock body %}
