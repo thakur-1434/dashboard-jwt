@@ -1,0 +1,40 @@
+
+{% extends "base.html" %}
+{% block content %}
+    
+{% block title %}
+About
+{% endblock title %}
+{% block aboutactive %} active {% endblock %}
+
+{% block body %}
+<div class="container mt-5">
+    <h2>User Profile</h2>
+    <table class="table table-bordered mt-3">
+        <tbody>
+            <tr>
+                <th>ID</th>
+                <td>{{ user_data.id }}</td>
+            </tr>
+            <tr>
+                <th>Email</th>
+                <td>{{ user_data.email }}</td>
+            </tr>
+            <tr>
+                <th>Name</th>
+                <td>{{ user_data.name }}</td>
+            </tr>
+            <tr>
+                <th>Account Created</th>
+                <td>{{ user_data.created_at }}</td>
+            </tr>
+            <tr>
+                <th>Active</th>
+                <td>{{ user_data.is_active }}</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+{% endblock body %}
+{% endblock content %}

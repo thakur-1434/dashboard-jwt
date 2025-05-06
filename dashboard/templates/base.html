@@ -1,0 +1,180 @@
+<!doctype html>
+<html lang="en" dir="ltr">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block title %}{% endblock title %} | Dashboard</title>
+
+    <!-- Bootstrap CSS (LTR) -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css"
+        integrity="sha384-..." crossorigin="anonymous">
+    <script src="https://cdn.tiny.cloud/1/rvlsy2wysu29fbkm7yr0vi58ehf1vq62bmiuj5djcpk4ow32/tinymce/5/tinymce.min.js"
+        referrerpolicy="origin"></script>
+</head>
+
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">Dashboard</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                data-bs-target="#navbarSupportedContent">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <!-- Left nav links -->
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item {% block homeactive %}{% endblock homeactive %}">
+                        <a class="nav-link" href="/">Home</a>
+                    </li>
+                    <li class="nav-item {% block aboutactive %}{% endblock aboutactive %}">
+                        <a class="nav-link" href="/about">About</a>
+                    </li>
+                    <li class="nav-item {% block blogactive %}{% endblock blogactive %}">
+                        <a class="nav-link" href="/profile">Profile</a>
+                    </li>
+                    <li class="nav-item {% block contactactive %}{% endblock contactactive %}">
+                        <a class="nav-link" href="/contact">Contact</a>
+                    </li>
+                </ul>
+
+                <!-- Search Form -->
+                <form method="get" action="/search" class="d-flex mx-3" role="search">
+                    <input class="form-control me-2" type="search" placeholder="Search" name="query" id="query"
+                        required>
+                    <button class="btn btn-outline-primary rounded-pill" type="submit">Search</button>
+                </form>
+
+                <!-- Auth Section -->
+                {% if user.is_authenticated %}
+                
+                <ul class="navbar-nav">
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle text-white" href="#" role="button" data-bs-toggle="dropdown">
+                            Welcome {{ user.username }}
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end">
+                            <li>
+                                <form method="POST" action="{% url 'logout' %}">
+                                    {% csrf_token %}
+                                    <button type="submit" class="dropdown-item">Logout</button>
+                                </form>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+                {% else %}
+                
+                <button class="btn btn-outline-success me-2" data-bs-toggle="modal"
+                    data-bs-target="#loginModal">Login</button>
+                <button class="btn btn-outline-success me-2" data-bs-toggle="modal" data-bs-target="#signupModal">Sign
+                    Up</button>
+                {% endif %}
+
+
+            </div>
+        </div>
+    </nav>
+
+
+    <!-- Signup Modal -->
+    <div class="modal fade" id="signupModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <form class="modal-content" method="post" action="/register/">
+                {% csrf_token %}
+                <div class="modal-header">
+                    <h5 class="modal-title">Sign Up Here</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <input class="form-control mb-2" type="text" name="name" placeholder="Full Name" required>
+                    <input class="form-control mb-2" type="email" name="email" placeholder="Email" required>
+                    <input class="form-control mb-2" type="password" name="password" placeholder="Password" required>
+                    <input class="form-control mb-2" type="password" name="password2" placeholder="Confirm Password"
+                        required>
+                    <div class="form-check mt-2">
+                        <input type="checkbox" class="form-check-input" name="tc" required>
+                        <label class="form-check-label">I agree to the terms & conditions</label>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">Sign Up</button>
+                </div>
+            </form>
+
+        </div>
+    </div>
+
+    <!-- Login Modal -->
+    <div class="modal fade" id="loginModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <form class="modal-content" method="post" action="/login/">
+                {% csrf_token %}
+                <div class="modal-header">
+                    <h5 class="modal-title">Login Here</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <input class="form-control mb-2" type="text" name="email" placeholder="Username" required>
+                    <input class="form-control mb-2" type="password" name="password" placeholder="Password" required>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">Login</button>
+                </div>
+                <hr>
+
+
+            </form>
+        </div>
+    </div>
+
+    <!-- Messages -->
+    {% if messages %}
+    {% for message in messages %}
+    <div class="alert alert-{{ message.tags }} alert-dismissible fade show m-2" role="alert">
+        {{ message }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+    {% endfor %}
+    {% endif %}
+
+    {% block body %}{% endblock body %}
+
+    <!-- Footer -->
+    <footer class="bg-dark text-white pt-5 pb-4">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-3">
+                    <h5 class="text-warning">Quick Links</h5>
+                    <p><a href="/" class="text-white text-decoration-none">Home</a></p>
+                    <p><a href="/profile" class="text-white text-decoration-none">Profile</a></p>
+                    <p><a href="/contact" class="text-white text-decoration-none">Contact</a></p>
+                    <p><a href="/about" class="text-white text-decoration-none">About</a></p>
+                </div>
+                <div class="col-md-3">
+                    <h5 class="text-warning">Contact</h5>
+                    <p>📍 Chandigarh, India</p>
+                    <p>📧 info@rahulsdashboard.com</p>
+                    <p>📞 +91 8899587160</p>
+                </div>
+                <div class="col-md-6 text-center">
+                    <h5 class="text-warning">Follow Us</h5>
+                    <a href="#" class="btn btn-outline-light btn-sm m-1 rounded-circle">Facebook</a>
+                    <a href="#" class="btn btn-outline-light btn-sm m-1 rounded-circle">linkedin</a>
+                    <a href="#" class="btn btn-outline-light btn-sm m-1 rounded-circle">Twiter</a>
+                    <a href="#" class="btn btn-outline-light btn-sm m-1 rounded-circle">Instagram</a>
+                </div>
+            </div>
+            <hr class="text-light" />
+            <p class="text-center">&copy; Dashboard. All rights reserved</p>
+        </div>
+    </footer>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js"
+        crossorigin="anonymous"></script>
+</body>
+
+</html>

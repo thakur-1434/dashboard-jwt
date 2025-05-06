@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% block content %}
+    
+{% block title %}
+About
+{% endblock title %}
+{% block aboutactive %} active {% endblock %}
+
+{% block body %}
+<div class="container my-5 py-5 bg-light rounded shadow">
+    <div class="row align-items-center">
+        <!-- Left Column: Image -->
+        <div class="col-lg-6 mb-4 mb-lg-0">
+            <img src="/static/img/img1.jpg" class="img-fluid rounded-3 shadow-sm" alt="About Us Image">
+        </div>
+        
+        <!-- Right Column: Content -->
+        <div class="col-lg-6">
+            <h2 class="display-6 fw-bold mb-4">Who We Are</h2>
+            <p class="lead">
+                Welcome to <strong>VegeMarket</strong> – your one-stop shop for fresh, organic, and locally sourced vegetables. 
+                Our mission is to connect you with nature’s best, grown by local farmers with love and care.
+            </p>
+            <p>
+                We believe in sustainability, transparency, and building a healthier future. From leafy greens to root veggies,
+                every item in our store is hand-picked for quality and freshness.
+            </p>
+            
+            <!-- Highlights / Features -->
+            <div class="row mt-4">
+                <div class="col-md-6 d-flex align-items-start mb-3">
+                    <i class="bi bi-truck display-6 text-success me-3"></i>
+                    <div>
+                        <h5 class="fw-semibold">Fast Delivery</h5>
+                        <p class="mb-0">Farm to your doorstep within 24 hours.</p>
+                    </div>
+                </div>
+                <div class="col-md-6 d-flex align-items-start mb-3">
+                    <i class="bi bi-leaf display-6 text-success me-3"></i>
+                    <div>
+                        <h5 class="fw-semibold">100% Organic</h5>
+                        <p class="mb-0">No chemicals, no compromise on health.</p>
+                    </div>
+                </div>
+            </div>
+            
+            {% comment %} <a href="{% url 'contact' %}" class="btn btn-outline-success btn-lg mt-4">Get in Touch</a> {% endcomment %}
+        </div>
+    </div>
+</div>
+
+{% endblock body %}
+{% endblock content %}

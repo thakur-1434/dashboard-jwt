@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <title>User Dashboard</title>
+    <style>
+        /* Reset some default styles */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        body, html {
+            height: 100%;
+            background: #f0f4f8;
+            color: #333;
+        }
+        .container {
+            max-width: 400px;
+            margin: 40px auto;
+            background: white;
+            padding: 20px 30px 40px 30px;
+            border-radius: 12px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+        }
+        h1 {
+            margin-bottom: 24px;
+            color: #2c3e50;
+            text-align: center;
+        }
+        form {
+            display: flex;
+            flex-direction: column;
+        }
+        label {
+            font-weight: 600;
+            margin-bottom: 6px;
+            font-size: 14px;
+        }
+        input[type="text"],
+        input[type="password"] {
+            padding: 10px 12px;
+            margin-bottom: 16px;
+            border-radius: 6px;
+            border: 1.5px solid #ddd;
+            font-size: 14px;
+            transition: border-color 0.3s ease;
+        }
+        input[type="text"]:focus,
+        input[type="password"]:focus {
+            border-color: #2980b9;
+            outline: none;
+        }
+        button {
+            background: #2980b9;
+            color: white;
+            border: none;
+            padding: 12px 16px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            margin-top: 8px;
+        }
+        button:hover {
+            background: #1c5980;
+        }
+        .message {
+            margin: 14px 0;
+            text-align: center;
+            font-size: 14px;
+            color: red;
+        }
+        .link-button {
+            background: transparent;
+            border: none;
+            color: #2980b9;
+            cursor: pointer;
+            font-size: 14px;
+            text-align: center;
+            margin-top: 10px;
+            text-decoration: underline;
+        }
+        .link-button:hover {
+            color: #1c5980;
+        }
+        .dashboard {
+            text-align: center;
+        }
+        .dashboard h2 {
+            color: #34495e;
+            margin-bottom: 12px;
+        }
+        .dashboard p {
+            font-size: 18px;
+            margin-bottom: 24px;
+        }
+        @media only screen and (max-width: 400px) {
+            .container {
+                width: 90%;
+                margin: 20px auto;
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container" id="auth-container">
+        <h1 id="form-title">Login</h1>
+        <form id="auth-form">
+            <div id="username-group">
+                <label for="username">Username</label>
+                <input type="text" id="username" name="username" autocomplete="username" required />
+            </div>
+            <div id="password-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" autocomplete="current-password" required />
+            </div>
+            <button type="submit" id="submit-btn">Login</button>
+        </form>
+        <div class="message" id="message"></div>
+        <button class="link-button" id="toggle-btn">Don't have an account? Register</button>
+    </div>
+
+    <div class="container" id="dashboard-container" style="display:none;">
+        <div class="dashboard">
+            <h2>Welcome, <span id="user-name"></span>!</h2>
+            <p>Your User ID is: <span id="user-id"></span></p>
+            <button id="logout-btn">Logout</button>
+        </div>
+    </div>
+
+    <script>
+        const authContainer = document.getElementById('auth-container');
+        const dashboardContainer = document.getElementById('dashboard-container');
+        const formTitle = document.getElementById('form-title');
+        const authForm = document.getElementById('auth-form');
+        const toggleBtn = document.getElementById('toggle-btn');
+        const submitBtn = document.getElementById('submit-btn');
+        const messageEl = document.getElementById('message');
+        const userNameEl = document.getElementById('user-name');
+        const userIdEl = document.getElementById('user-id');
+        const logoutBtn = document.getElementById('logout-btn');
+        const usernameInput = document.getElementById('username');
+        const passwordInput = document.getElementById('password');
+
+        // Base API URL adjust if needed
+        const API_BASE = '/api';
+
+        // Track current state: 'login' or 'register'
+        let currentMode = 'login';
+
+        toggleBtn.addEventListener('click', () => {
+            if(currentMode === 'login') {
+                currentMode = 'register';
+                formTitle.textContent = 'Register';
+                submitBtn.textContent = 'Register';
+                toggleBtn.textContent = 'Already have an account? Login';
+                messageEl.textContent = '';
+            } else {
+                currentMode = 'login';
+                formTitle.textContent = 'Login';
+                submitBtn.textContent = 'Login';
+                toggleBtn.textContent = "Don't have an account? Register";
+                messageEl.textContent = '';
+            }
+        });
+
+        authForm.addEventListener('submit', async e => {
+            e.preventDefault();
+            messageEl.style.color = 'red';
+            const username = usernameInput.value.trim();
+            const password = passwordInput.value.trim();
+            if(!username || !password) {
+                messageEl.textContent = 'Please enter username and password.';
+                return;
+            }
+            messageEl.textContent = '';
+
+            if(currentMode === 'register') {
+                // Registration flow
+                try {
+                    const res = await fetch(`${API_BASE}/register/`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ username, password }),
+                    });
+                    if(res.status === 201) {
+                        messageEl.style.color = 'green';
+                        messageEl.textContent = 'Registration successful. Please login.';
+                        currentMode = 'login';
+                        formTitle.textContent = 'Login';
+                        submitBtn.textContent = 'Login';
+                        toggleBtn.textContent = "Don't have an account? Register";
+                        passwordInput.value = '';
+                    } else {
+                        const data = await res.json();
+                        messageEl.textContent = data?.username?.join(', ') || data?.password?.join(', ') || data?.error || 'Registration failed.';
+                    }
+                } catch {
+                    messageEl.textContent = 'Server error. Try again later.';
+                }
+            } else {
+                // Login flow
+                try {
+                    const res = await fetch(`${API_BASE}/login/`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ username, password }),
+                    });
+                    if(res.ok) {
+                        const data = await res.json();
+                        localStorage.setItem('access', data.access);
+                        localStorage.setItem('refresh', data.refresh);
+                        showDashboard();
+                    } else {
+                        const data = await res.json();
+                        messageEl.textContent = data.error || 'Invalid username or password.';
+                    }
+                } catch {
+                    messageEl.textContent = 'Server error. Try again later.';
+                }
+            }
+        });
+
+        logoutBtn.addEventListener('click', () => {
+            localStorage.removeItem('access');
+            localStorage.removeItem('refresh');
+            dashboardContainer.style.display = 'none';
+            authContainer.style.display = 'block';
+            messageEl.style.color = 'red';
+            messageEl.textContent = 'Logged out successfully.';
+            // reset to login mode on logout
+            currentMode = 'login';
+            formTitle.textContent = 'Login';
+            submitBtn.textContent = 'Login';
+            toggleBtn.textContent = "Don't have an account? Register";
+            usernameInput.value = '';
+            passwordInput.value = '';
+        });
+
+        async function showDashboard() {
+            const token = localStorage.getItem('access');
+            if(!token) {
+                authContainer.style.display = 'block';
+                dashboardContainer.style.display = 'none';
+                return;
+            }
+            try {
+                const res = await fetch(`${API_BASE}/user/`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+                if(res.ok) {
+                    const userData = await res.json();
+                    userNameEl.textContent = userData.username;
+                    userIdEl.textContent = userData.id;
+                    authContainer.style.display = 'none';
+                    dashboardContainer.style.display = 'block';
+                    messageEl.textContent = '';
+                } else {
+                    logoutBtn.click(); // force logout if token invalid
+                }
+            } catch {
+                messageEl.textContent = 'Could not fetch user details.';
+            }
+        }
+
+        // On page load check if logged in
+        document.addEventListener('DOMContentLoaded', () => {
+            const token = localStorage.getItem('access');
+            if(token) {
+                showDashboard();
+            }
+        });
+    </script>
+</body>
+</html>
+

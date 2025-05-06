@@ -42,9 +42,9 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
-    'dashboard',
     'rest_framework_simplejwt',
     'rest_framework_simplejwt.token_blacklist',
+    'dashboard',
     'corsheaders'
 ]
 
@@ -140,6 +140,9 @@ REST_FRAMEWORK = {
     'DEFAULT_RENDERER_CLASSES': (
         'rest_framework.renderers.JSONRenderer',
     ),
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'dashboard.authentication.CustomJWTAuthentication',
+    ]
 }
 
 STATIC_URL = '/static/'
@@ -149,7 +152,7 @@ STATIC_URL = '/static/'
 
 
 SIMPLE_JWT = {
-    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=5),
+    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=60),
     "REFRESH_TOKEN_LIFETIME": timedelta(days=1),
 
     "AUTH_HEADER_TYPES": ("Bearer",),
@@ -165,7 +168,7 @@ SIMPLE_JWT = {
     "JTI_CLAIM": "jti",
     
     'BLACKLIST_AFTER_ROTATION': True,
-    'ROTATE_REFRESH_TOKENS': True,
+    'ROTATE_REFRESH_TOKENS': False,
     'AUTH_TOKEN_CLASSES': ('rest_framework_simplejwt.tokens.AccessToken',),
 
 }
@@ -174,3 +177,5 @@ CORS_ALLOWED_ORIGINS = [
     "https://localhost:3000",
     "https://127.0.0.1:3000",
 ]
+
+AUTHENTICATION_BACKENDS = ['dashboard.authentication.EmailBackend']
