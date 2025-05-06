@@ -3,8 +3,12 @@ class JWTTokenCookieMiddleware:
         self.get_response = get_response
 
     def __call__(self, request):
-        access_token = request.COOKIES.get('access')
+        # Extract token from cookie
+        access_token = request.COOKIES.get('access_token')  # use 'access_token' to match  cookie key
         if access_token:
+            # Set token Authorization header for DRF
             request.META['HTTP_AUTHORIZATION'] = f'Bearer {access_token}'
+        
+        # Continue processing
         response = self.get_response(request)
         return response
