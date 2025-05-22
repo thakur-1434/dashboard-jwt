@@ -76,7 +76,6 @@ Displays username, email, and logout button
 
 - POST /logout/
 
-- 
 ## 🙌 Acknowledgements
 
 - Django
