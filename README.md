@@ -75,10 +75,10 @@ Displays username, email, and logout button
 🔓 Logout
 
 - POST /logout/
+
+- 
 ## 🙌 Acknowledgements
 
 - Django
-
 - Django REST Framework
-
 - SimpleJWT
