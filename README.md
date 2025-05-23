@@ -83,7 +83,7 @@ Requires login (via Django session)
 
 Displays username, email, and logout button
 
-🔓 Logout
+# 🔓 Logout
 
 - POST /logout/
 
