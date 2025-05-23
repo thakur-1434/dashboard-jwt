@@ -8,15 +8,26 @@ This project is a Django-based web application that implements user authenticati
 
 ---
 
-## 🔧 Features
+# 🔧 Features
 
--  User Registration API    ✅ 
--  User Login API (JWT Authentication) ✅ 
--  Get Authenticated User Details  ✅ 
--  Dashboard Page with User Info      ✅ 
--  Logout Functionality      ✅ 
--  Basic CSS Styling for Dashboard UI   ✅ 
--  SQLite with `.env` environment variable support   ✅ 
+✅ User Registration API
+
+✅ User Login API (JWT Authentication)
+
+✅ Get Authenticated User Details
+
+✅ Dashboard Page with User Info
+
+🔍 Search Functionality (by name and email)
+
+👥 Display All Users
+
+✅ Logout Functionality
+
+✅ Basic CSS Styling for Dashboard UI
+
+✅ SQLite with .env Environment Variable Support
+
 
 
 # Project Setup and Installation
